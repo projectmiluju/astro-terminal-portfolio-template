@@ -2,122 +2,747 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../config/site';
 
-const profileSections = [
+const experienceEntries = [
   {
-    title: 'How To Use This Template',
-    items: [
-      'Update src/config/site.ts with your name, links, and homepage copy.',
-      'Replace the sample MDX files in src/content/blog and src/content/projects.',
-      'Change astro.config.mjs to your production GitHub Pages URL.',
-    ],
-  },
-  {
-    title: 'Recommended Customization',
-    items: [
-      'Keep project pages focused on decisions, tradeoffs, and measurable results.',
-      'Use short blog summaries because they are reused across cards, feeds, and metadata.',
-      'Remove sections you do not need instead of leaving placeholder pages in production.',
+    period: '[YYYY.MM - YYYY.MM]',
+    company: 'Your Company Or Team',
+    role: 'Product Engineer',
+    bullets: [
+      'Replace this block with your actual role, scope, and outcomes.',
+      'Keep each bullet focused on shipped work or measurable impact.',
+      'Use one entry per meaningful experience instead of listing everything.',
     ],
   },
 ];
+
+const educationEntries = [
+  {
+    period: '[YYYY.MM - YYYY.MM]',
+    name: 'School, Program, Or Cohort',
+    detail: 'Degree, track, or a short explanation of the program.',
+    badge: 'optional',
+  },
+  {
+    period: '[YYYY.MM - YYYY.MM]',
+    name: 'Another Learning Milestone',
+    detail: 'Use this section for education, bootcamps, or notable self-directed study.',
+  },
+];
+
+const skillGroups = [
+  { name: 'Backend/', skills: ['Node.js', 'Python', 'Java', 'REST API', 'SQL'], primary: ['Node.js', 'Python'] },
+  { name: 'Frontend/', skills: ['Astro', 'React', 'TypeScript', 'CSS', 'MDX'], primary: ['Astro', 'TypeScript', 'React'] },
+  { name: 'Infra/', skills: ['GitHub Actions', 'Docker', 'GitHub Pages', 'AWS'], primary: ['GitHub Actions', 'Docker'] },
+  { name: 'Content/', skills: ['Markdown', 'MDX', 'RSS', 'SEO'], primary: ['MDX', 'RSS'] },
+  { name: 'Workflow/', skills: ['Documentation', 'Design Systems', 'DX', 'Architecture'], primary: ['Documentation', 'Architecture'] },
+];
+
+const values = [
+  {
+    title: 'Structure First',
+    desc: 'Use the page to show how you break down ambiguous work into clear architecture, delivery steps, and documentation.',
+  },
+  {
+    title: 'Evidence Over Buzzwords',
+    desc: 'Replace generic claims with shipped features, hard constraints, and outcomes that can actually be evaluated.',
+  },
+  {
+    title: 'Write Things Down',
+    desc: 'This template works best when projects and notes are treated as reusable documentation, not just marketing copy.',
+  },
+  {
+    title: 'Own The Whole Flow',
+    desc: 'Present how planning, implementation, and deployment connect instead of describing isolated technologies.',
+  },
+];
+
+const workStyle = [
+  'Start with a short product or technical brief before implementation.',
+  'Prefer small, verifiable increments over large unstructured changes.',
+  'Keep project pages focused on decisions, tradeoffs, and constraints.',
+  'Treat docs and content structure as part of the product, not afterthoughts.',
+];
 ---
 
-<BaseLayout title="About" description="How to adapt the terminal portfolio template to your own work.">
-  <section class="about">
-    <div class="container about-grid">
-      <div class="about-terminal">
-        <div class="about-bar">
-          <span>about.txt</span>
+<BaseLayout title="About" description="A terminal-style about page you can adapt to your own background and working style.">
+  <div class="about-page">
+    <div class="container">
+      <header class="identity-section reveal">
+        <div class="terminal-window identity-terminal">
+          <div class="terminal-titlebar">
+            <div class="terminal-dots">
+              <span class="terminal-dot dot-close"></span>
+              <span class="terminal-dot dot-minimize"></span>
+              <span class="terminal-dot dot-maximize"></span>
+            </div>
+            <span class="terminal-title">about.txt — {siteConfig.name}@portfolio</span>
+            <span class="terminal-title-right">bash</span>
+          </div>
+          <div class="identity-body">
+            <div class="profile-col">
+              <div class="profile-frame">
+                <img
+                  src="/images/profile.png"
+                  alt="Profile"
+                  class="profile-img"
+                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                />
+                <div class="profile-placeholder" aria-hidden="true">
+                  <span class="placeholder-ascii">[ ? ]</span>
+                </div>
+              </div>
+              <div class="profile-links">
+                <a href={siteConfig.links.github} class="profile-link" target="_blank" rel="noopener noreferrer">
+                  [github]
+                </a>
+                <a href={`mailto:${siteConfig.author.email}`} class="profile-link">
+                  [email]
+                </a>
+              </div>
+            </div>
+
+            <div class="info-col">
+              <div class="info-cmd">
+                <span class="p-dollar">$ </span><span class="p-cmd">cat about.txt</span>
+              </div>
+              <div class="info-fields">
+                <div class="info-row">
+                  <span class="field-key">name   </span>
+                  <span class="field-sep">: </span>
+                  <span class="field-val field-bright">{siteConfig.author.name}</span>
+                </div>
+                <div class="info-row">
+                  <span class="field-key">role   </span>
+                  <span class="field-sep">: </span>
+                  <span class="field-val field-accent">Replace With Your Role</span>
+                </div>
+                <div class="info-row">
+                  <span class="field-key">email  </span>
+                  <span class="field-sep">: </span>
+                  <a href={`mailto:${siteConfig.author.email}`} class="field-val field-link">{siteConfig.author.email}</a>
+                </div>
+                <div class="info-row">
+                  <span class="field-key">github </span>
+                  <span class="field-sep">: </span>
+                  <a href={siteConfig.links.github} class="field-val field-link" target="_blank" rel="noopener noreferrer">{siteConfig.links.github}</a>
+                </div>
+                <div class="info-divider">──────────────────────────────────────</div>
+                <div class="info-bio">
+                  <p><span class="bio-prefix">&gt; </span>Use this section for a short positioning statement.</p>
+                  <p><span class="bio-prefix">&gt; </span>Keep it specific enough that readers understand your actual focus.</p>
+                  <p><span class="bio-prefix">&gt; </span>Explain how you work, not just what tools you have touched.</p>
+                  <p><span class="bio-prefix">&gt; </span>Delete the placeholder copy before publishing.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="about-body">
-          <p><span class="prompt">$</span> cat owner.txt</p>
-          <p class="about-name">{siteConfig.author.name}</p>
-          <p><span class="prompt">$</span> cat contact.txt</p>
-          <p><a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a></p>
-          <p><a href={siteConfig.links.github} target="_blank" rel="noopener noreferrer">{siteConfig.links.github}</a></p>
-          <p><span class="prompt">$</span> cat notes.txt</p>
-          <p>This page is intentionally generic. Replace it with your own background, timeline, stack, and working style.</p>
+      </header>
+
+      <div class="content-grid">
+        <div class="term-card reveal stagger-1">
+          <div class="card-titlebar">
+            <span class="card-cmd">$ cat experience.log</span>
+            <span class="card-file">experience.log</span>
+          </div>
+          <div class="card-body">
+            {experienceEntries.map((entry) => (
+              <div class="exp-entry">
+                <div class="exp-header-row">
+                  <span class="exp-period">{entry.period}</span>
+                  <span class="exp-company">{entry.company}</span>
+                </div>
+                <div class="exp-role">
+                  <span class="field-key">role</span>
+                  <span class="field-sep"> : </span>
+                  <span class="field-accent">{entry.role}</span>
+                </div>
+                <ul class="exp-list">
+                  {entry.bullets.map((bullet) => (
+                    <li><span class="li-arrow">·</span>{bullet}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="term-card reveal stagger-2">
+          <div class="card-titlebar">
+            <span class="card-cmd">$ cat education.txt</span>
+            <span class="card-file">education.txt</span>
+          </div>
+          <div class="card-body">
+            {educationEntries.map((entry, index) => (
+              <>
+                <div class="edu-entry">
+                  <div class="edu-period">{entry.period}</div>
+                  <div class="edu-name">
+                    {entry.name}
+                    {entry.badge && <span class="edu-badge">{entry.badge}</span>}
+                  </div>
+                  <div class="edu-detail">{entry.detail}</div>
+                </div>
+                {index < educationEntries.length - 1 && <div class="edu-sep">──────────────</div>}
+              </>
+            ))}
+          </div>
+        </div>
+
+        <div class="term-card term-card-full reveal stagger-3">
+          <div class="card-titlebar">
+            <span class="card-cmd">$ ls -la skills/</span>
+            <span class="card-file">skills/</span>
+          </div>
+          <div class="card-body skills-body">
+            {skillGroups.map((group) => (
+              <div class="skill-group">
+                <div class="skill-group-name">{group.name}</div>
+                <div class="skill-tags">
+                  {group.skills.map((skill) => (
+                    <span class:list={['skill-tag', { 'skill-primary': group.primary.includes(skill) }]}>{skill}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="term-card reveal stagger-4">
+          <div class="card-titlebar">
+            <span class="card-cmd">$ cat values.md</span>
+            <span class="card-file">values.md</span>
+          </div>
+          <div class="card-body">
+            <div class="values-list">
+              {values.map((value) => (
+                <div class="value-row">
+                  <span class="val-check">✓</span>
+                  <div class="val-content">
+                    <span class="val-title">{value.title}</span>
+                    <span class="val-desc">{value.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="term-card reveal stagger-5">
+          <div class="card-titlebar">
+            <span class="card-cmd">$ cat work-style.md</span>
+            <span class="card-file">work-style.md</span>
+          </div>
+          <div class="card-body">
+            <ul class="work-list">
+              {workStyle.map((item) => (
+                <li><span class="li-arrow">→</span>{item}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
-
-      {profileSections.map((section) => (
-        <section class="info-card">
-          <h2>{section.title}</h2>
-          <ul>
-            {section.items.map((item) => <li>{item}</li>)}
-          </ul>
-        </section>
-      ))}
     </div>
-  </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .about {
-    padding: var(--space-12) 0;
+  .about-page {
+    padding: calc(var(--header-height) + var(--space-10)) 0 var(--space-20);
+    font-family: var(--font-mono);
   }
 
-  .about-grid {
-    display: grid;
-    gap: var(--space-5);
+  .identity-section {
+    margin-bottom: var(--space-8);
   }
 
-  .about-terminal,
-  .info-card {
+  .identity-terminal {
+    overflow: hidden;
+  }
+
+  .terminal-window {
+    background-color: var(--color-bg-alt);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: var(--color-bg-alt);
   }
 
-  .about-bar {
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
+    background-color: var(--color-bg-elevated);
     border-bottom: 1px solid var(--color-border);
-    font-family: var(--font-mono);
+  }
+
+  .terminal-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot-close { background-color: #ff5f57; }
+  .dot-minimize { background-color: #febc2e; }
+  .dot-maximize { background-color: #28c840; }
+
+  .terminal-title {
+    flex: 1;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .terminal-title-right {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    flex-shrink: 0;
+  }
+
+  .identity-body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0;
+  }
+
+  .profile-col {
+    padding: var(--space-6) var(--space-6) var(--space-6) var(--space-5);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .profile-frame {
+    width: 100px;
+    height: 100px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-bg-elevated);
+  }
+
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%);
+  }
+
+  .profile-placeholder {
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .placeholder-ascii {
+    font-size: var(--text-lg);
     color: var(--color-text-muted);
   }
 
-  .about-body,
-  .info-card {
-    padding: var(--space-5);
+  .profile-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
   }
 
-  .about-body {
-    font-family: var(--font-mono);
+  .profile-link {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    white-space: nowrap;
   }
 
-  .about-body p {
-    margin: 0 0 var(--space-3);
-  }
-
-  .about-name {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--color-text-bright);
-  }
-
-  .prompt {
+  .profile-link:hover {
     color: var(--color-accent);
   }
 
-  .info-card h2 {
-    margin: 0 0 var(--space-3);
-    font-size: var(--text-lg);
+  .info-col {
+    padding: var(--space-5) var(--space-6);
   }
 
-  .info-card ul {
-    margin: 0;
-    padding-left: 1.2rem;
+  .info-cmd {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .p-dollar { color: var(--color-accent); }
+  .p-cmd { color: var(--color-text-muted); }
+
+  .info-fields {
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .field-key {
+    color: var(--color-prompt-path);
+    white-space: pre;
+    flex-shrink: 0;
+  }
+
+  .field-sep {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .field-val {
     color: var(--color-text);
   }
 
-  .info-card li + li {
-    margin-top: var(--space-2);
+  .field-bright {
+    color: var(--color-text-bright);
+    font-weight: 600;
+    font-size: var(--text-lg);
   }
 
-  @media (min-width: 900px) {
-    .about-grid {
-      grid-template-columns: 1.2fr 1fr 1fr;
-      align-items: start;
+  .field-accent {
+    color: var(--color-accent);
+  }
+
+  .field-link {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .field-link:hover {
+    color: var(--color-accent);
+  }
+
+  .info-divider {
+    color: var(--color-text-dim);
+    margin: var(--space-3) 0;
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+  }
+
+  .info-bio {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+  }
+
+  .info-bio p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .bio-prefix {
+    color: var(--color-text-dim);
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .term-card {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .term-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .term-card-full {
+    grid-column: span 2;
+  }
+
+  .card-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .card-cmd {
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  .card-file {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  .card-body {
+    padding: var(--space-5) var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .exp-entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .exp-header-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .exp-period {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .exp-company {
+    color: var(--color-text-bright);
+    font-weight: 600;
+  }
+
+  .exp-role {
+    font-size: var(--text-xs);
+    display: flex;
+    align-items: baseline;
+  }
+
+  .exp-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-2) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .exp-list li {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    display: flex;
+    gap: var(--space-2);
+    line-height: 1.6;
+  }
+
+  .li-arrow {
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .edu-entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .edu-period {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .edu-name {
+    color: var(--color-text-bright);
+    font-weight: 600;
+  }
+
+  .edu-detail {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .edu-badge {
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    background-color: var(--color-accent-light);
+    border-radius: var(--radius-sm);
+    padding: 0 0.4em;
+    margin-left: var(--space-2);
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  .edu-sep {
+    color: var(--color-text-dim);
+    font-size: var(--text-xs);
+    margin: var(--space-3) 0;
+  }
+
+  .skills-body {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-5);
+  }
+
+  .skill-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .skill-group-name {
+    font-size: var(--text-xs);
+    color: var(--color-prompt-path);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  .skill-tag {
+    font-size: var(--text-xs);
+    padding: 0.1em 0.5em;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-sm);
+  }
+
+  .skill-primary {
+    border-color: rgba(0, 255, 65, 0.2);
+    color: var(--color-accent);
+    background-color: var(--color-accent-light);
+  }
+
+  .values-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .value-row {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border);
+    align-items: flex-start;
+  }
+
+  .value-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .value-row:first-child {
+    padding-top: 0;
+  }
+
+  .val-check {
+    color: var(--color-accent);
+    flex-shrink: 0;
+    font-size: var(--text-sm);
+    margin-top: 1px;
+  }
+
+  .val-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .val-title {
+    color: var(--color-text-bright);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .val-desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+  }
+
+  .work-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .work-list li {
+    display: flex;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1100px) {
+    .skills-body {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .skills-body {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-page {
+      padding-top: calc(var(--header-height) + var(--space-6));
+    }
+
+    .identity-body {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-col {
+      flex-direction: row;
+      border-right: none;
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-4);
+    }
+
+    .profile-frame {
+      width: 72px;
+      height: 72px;
+    }
+
+    .profile-links {
+      align-items: flex-start;
+    }
+
+    .info-col {
+      padding: var(--space-4);
+    }
+
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .term-card-full {
+      grid-column: span 1;
+    }
+
+    .skills-body {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
     }
   }
 </style>
