@@ -31,7 +31,7 @@ GitHub Pages 배포를 전제로 구성되어 있으며, 프로젝트 소개와 
 
 | Home | Blog | Project |
 |------|------|---------|
-| <!-- ![Home](./docs/myblog-home.png) --> | <!-- ![Blog](./docs/myblog-blog.png) --> | <!-- ![Project](./docs/myblog-project.png) --> |
+| ![Home](./docs/myblog-home.png) | ![Blog](./docs/myblog-blog.png) | ![Project](./docs/myblog-project.png) |
 
 ---
 
