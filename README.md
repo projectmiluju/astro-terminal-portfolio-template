@@ -5,6 +5,8 @@
 
 GitHub Pages 배포를 전제로 구성되어 있으며, 프로젝트 소개와 MDX 기반 블로그를 한 저장소에서 운영할 수 있습니다.
 
+실제 적용 예시는 [projectmiluju.github.io](https://projectmiluju.github.io) 에서 볼 수 있습니다.
+
 ## Overview
 
 이 템플릿은 다음 요구를 빠르게 만족시키는 데 초점을 둡니다.
