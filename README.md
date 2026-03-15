@@ -7,6 +7,34 @@ GitHub Pages 배포를 전제로 구성되어 있으며, 프로젝트 소개와 
 
 실제 적용 예시는 [projectmiluju.github.io](https://projectmiluju.github.io) 에서 볼 수 있습니다.
 
+## Preview
+
+### Template UI
+
+> 이 저장소의 기본 템플릿 UI입니다.
+
+<!-- 템플릿 블로그 스크린샷을 아래에 추가하세요 -->
+<!-- ![Template UI](./docs/preview-template.png) -->
+
+| Home | Blog | Project |
+|------|------|---------|
+| <!-- ![Home](./docs/template-home.png) --> | <!-- ![Blog](./docs/template-blog.png) --> | <!-- ![Project](./docs/template-project.png) --> |
+
+---
+
+### My Blog UI
+
+> 실제 적용 예시: [projectmiluju.github.io](https://projectmiluju.github.io)
+
+<!-- 실제 블로그 스크린샷을 아래에 추가하세요 -->
+<!-- ![My Blog UI](./docs/preview-myblog.png) -->
+
+| Home | Blog | Project |
+|------|------|---------|
+| <!-- ![Home](./docs/myblog-home.png) --> | <!-- ![Blog](./docs/myblog-blog.png) --> | <!-- ![Project](./docs/myblog-project.png) --> |
+
+---
+
 ## Overview
 
 이 템플릿은 다음 요구를 빠르게 만족시키는 데 초점을 둡니다.
