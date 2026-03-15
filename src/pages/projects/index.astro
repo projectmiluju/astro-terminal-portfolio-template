@@ -26,7 +26,7 @@ const projectsData = allProjects.map(project => ({
     <div class="container">
 
       <!-- Page Header -->
-      <div class="page-header">
+      <div class="page-header reveal">
         <div class="header-prompt">
           <span class="prompt-user">user@dev</span><span class="prompt-sep">:</span><span class="prompt-path">~/projects</span><span class="prompt-dollar">$</span>
           <span class="prompt-cmd">ls -la projects/ <span class="cmd-count"># {allProjects.length} projects found</span></span>
@@ -37,7 +37,7 @@ const projectsData = allProjects.map(project => ({
       </div>
 
       <!-- Stack Filter -->
-      <div class="filter-panel">
+      <div class="filter-panel reveal stagger-1">
         <div class="filter-prompt">
           <span class="prompt-dollar">$</span>
           <span class="filter-label">filter --stack=</span>
@@ -57,8 +57,8 @@ const projectsData = allProjects.map(project => ({
 
       <!-- Projects Grid -->
       <div class="projects-grid" id="projects-grid">
-        {allProjects.map((project) => (
-          <article class="pcard" data-stack={project.data.stack.join(',')}>
+        {allProjects.map((project, index) => (
+          <article class={`pcard reveal stagger-${(index % 6) + 1}`} style={`transition-delay: ${index * 70}ms;`} data-stack={project.data.stack.join(',')}>
             <a href={`/projects/${project.slug}`} class="pcard-link">
 
               <!-- Terminal titlebar -->
