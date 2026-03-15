@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+
+const profileSections = [
+  {
+    title: 'How To Use This Template',
+    items: [
+      'Update src/config/site.ts with your name, links, and homepage copy.',
+      'Replace the sample MDX files in src/content/blog and src/content/projects.',
+      'Change astro.config.mjs to your production GitHub Pages URL.',
+    ],
+  },
+  {
+    title: 'Recommended Customization',
+    items: [
+      'Keep project pages focused on decisions, tradeoffs, and measurable results.',
+      'Use short blog summaries because they are reused across cards, feeds, and metadata.',
+      'Remove sections you do not need instead of leaving placeholder pages in production.',
+    ],
+  },
+];
+---
+
+<BaseLayout title="About" description="How to adapt the terminal portfolio template to your own work.">
+  <section class="about">
+    <div class="container about-grid">
+      <div class="about-terminal">
+        <div class="about-bar">
+          <span>about.txt</span>
+        </div>
+        <div class="about-body">
+          <p><span class="prompt">$</span> cat owner.txt</p>
+          <p class="about-name">{siteConfig.author.name}</p>
+          <p><span class="prompt">$</span> cat contact.txt</p>
+          <p><a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a></p>
+          <p><a href={siteConfig.links.github} target="_blank" rel="noopener noreferrer">{siteConfig.links.github}</a></p>
+          <p><span class="prompt">$</span> cat notes.txt</p>
+          <p>This page is intentionally generic. Replace it with your own background, timeline, stack, and working style.</p>
+        </div>
+      </div>
+
+      {profileSections.map((section) => (
+        <section class="info-card">
+          <h2>{section.title}</h2>
+          <ul>
+            {section.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding: var(--space-12) 0;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .about-terminal,
+  .info-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+  }
+
+  .about-bar {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+  }
+
+  .about-body,
+  .info-card {
+    padding: var(--space-5);
+  }
+
+  .about-body {
+    font-family: var(--font-mono);
+  }
+
+  .about-body p {
+    margin: 0 0 var(--space-3);
+  }
+
+  .about-name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text-bright);
+  }
+
+  .prompt {
+    color: var(--color-accent);
+  }
+
+  .info-card h2 {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-lg);
+  }
+
+  .info-card ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--color-text);
+  }
+
+  .info-card li + li {
+    margin-top: var(--space-2);
+  }
+
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1.2fr 1fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

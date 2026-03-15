@@ -1,0 +1,176 @@
+---
+import { siteConfig } from '../config/site';
+
+const currentYear = new Date().getFullYear();
+
+const footerLinks = [
+  { href: '/projects', label: '/projects' },
+  { href: '/blog', label: '/blog' },
+  { href: '/about', label: '/about' },
+  { href: '/rss.xml', label: '/rss' },
+];
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <span class="footer-sep">─</span>
+    </div>
+
+    <div class="footer-body">
+      <!-- Exit message -->
+      <div class="footer-exit">
+        <span class="prompt-user">{siteConfig.name}</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-sep-colon">:</span><span class="prompt-path">~</span><span class="prompt-dollar"> $ </span>
+        <span class="exit-cmd">exit</span>
+      </div>
+      <p class="footer-message">
+        <span class="text-muted"># session ended · © {currentYear} {siteConfig.name}</span>
+      </p>
+    </div>
+
+    <div class="footer-bottom">
+      <nav class="footer-nav" aria-label="푸터 내비게이션">
+        <ul class="footer-links">
+          {footerLinks.map(({ href, label }) => (
+            <li>
+              <a href={href}>{label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="footer-social">
+        <a
+          href={siteConfig.links.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          class="social-link"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          [github]
+        </a>
+        <a
+          href={`mailto:${siteConfig.author.email}`}
+          aria-label="Email"
+          class="social-link"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 1.99 2H20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          [email]
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-20);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-8) 0 var(--space-10);
+    font-family: var(--font-mono);
+  }
+
+  .footer-top {
+    color: var(--color-text-dim);
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-6);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-sep {
+    display: block;
+    color: var(--color-border);
+    user-select: none;
+  }
+
+  .footer-body {
+    margin-bottom: var(--space-6);
+  }
+
+  .footer-exit {
+    font-size: var(--text-sm);
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .prompt-user { color: var(--color-text-bright); }
+  .prompt-at,
+  .prompt-host { color: var(--color-accent); }
+  .prompt-sep-colon { color: var(--color-text-muted); }
+  .prompt-path { color: var(--color-prompt-path); }
+  .prompt-dollar { color: var(--color-text-bright); }
+
+  .exit-cmd {
+    color: var(--color-text-bright);
+    font-style: italic;
+  }
+
+  .footer-message {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-accent);
+  }
+
+  .footer-social {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .social-link:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

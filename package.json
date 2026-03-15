@@ -1,0 +1,31 @@
+{
+  "name": "astro-terminal-portfolio-template",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro terminal-style portfolio and blog template for GitHub Pages",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.astro --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^3.1.0",
+    "@astrojs/rss": "^4.0.5",
+    "@astrojs/sitemap": "^3.6.1",
+    "astro": "^4.15.0",
+    "astro-icon": "^1.1.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-astro": "^1.2.0",
+    "prettier": "^3.2.0",
+    "prettier-plugin-astro": "^0.13.0",
+    "typescript": "^5.4.0"
+  }
+}

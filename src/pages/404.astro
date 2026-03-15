@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 Not Found">
+  <section class="error-page">
+    <div class="container">
+      <div class="error-terminal">
+
+        <!-- Titlebar -->
+        <div class="terminal-titlebar">
+          <div class="dots">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+          </div>
+          <span class="titlebar-text">bash — 404</span>
+        </div>
+
+        <!-- Terminal body -->
+        <div class="terminal-body">
+          <div class="t-line">
+            <span class="t-prompt"><span class="t-user">user@dev</span><span class="t-sep">:</span><span class="t-path">~</span><span class="t-dollar">$</span></span>
+            <span class="t-cmd"> cd /requested/path</span>
+          </div>
+          <div class="t-line t-error">
+            bash: cd: /requested/path: No such file or directory
+          </div>
+
+          <div class="t-line t-gap">
+            <span class="t-prompt"><span class="t-user">user@dev</span><span class="t-sep">:</span><span class="t-path">~</span><span class="t-dollar">$</span></span>
+            <span class="t-cmd"> ls -la</span>
+          </div>
+          <div class="t-output">
+            <div class="t-out-line">
+              <span class="t-out-code">404</span>
+              <span class="t-out-msg">// page not found</span>
+            </div>
+            <div class="t-out-line t-out-dim">
+              요청하신 경로가 존재하지 않거나 이동되었습니다.
+            </div>
+          </div>
+
+          <div class="t-line t-gap">
+            <span class="t-prompt"><span class="t-user">user@dev</span><span class="t-sep">:</span><span class="t-path">~</span><span class="t-dollar">$</span></span>
+            <span class="t-cmd"> find / -name "valid-paths"</span>
+          </div>
+          <div class="t-output">
+            <div class="t-out-line t-out-dim">→ /</div>
+            <div class="t-out-line t-out-dim">→ /projects</div>
+            <div class="t-out-line t-out-dim">→ /blog</div>
+            <div class="t-out-line t-out-dim">→ /about</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="t-line t-gap">
+            <span class="t-prompt"><span class="t-user">user@dev</span><span class="t-sep">:</span><span class="t-path">~</span><span class="t-dollar">$</span></span>
+            <span class="t-cursor-wrap"><span class="cursor"></span></span>
+          </div>
+
+          <div class="error-actions">
+            <a href="/" class="elink">[cd ~]</a>
+            <a href="/projects" class="elink">[cd /projects]</a>
+            <a href="/blog" class="elink">[cd /blog]</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .error-page {
+    min-height: calc(100vh - var(--header-height) - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) 0;
+    font-family: var(--font-mono);
+  }
+
+  .error-terminal {
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  /* Titlebar */
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background-color: #ff5f57; }
+  .dot-y { background-color: #febc2e; }
+  .dot-g { background-color: #28c840; }
+
+  .titlebar-text {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  /* Terminal body */
+  .terminal-body {
+    padding: var(--space-5) var(--space-5) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .t-line {
+    display: flex;
+    align-items: center;
+    font-size: var(--text-sm);
+  }
+
+  .t-gap { margin-top: var(--space-4); }
+
+  .t-prompt { display: flex; align-items: center; flex-shrink: 0; }
+  .t-user   { color: var(--color-accent); font-weight: 700; }
+  .t-sep    { color: var(--color-text-muted); }
+  .t-path   { color: var(--color-prompt-path); }
+  .t-dollar { color: var(--color-text-muted); margin-right: var(--space-1); }
+  .t-cmd    { color: var(--color-text-bright); }
+
+  .t-error {
+    font-size: var(--text-xs);
+    color: #ff5f57;
+    padding-left: var(--space-2);
+    margin-top: var(--space-1);
+  }
+
+  .t-output {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-2) 0 var(--space-1) var(--space-4);
+  }
+
+  .t-out-line {
+    font-size: var(--text-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .t-out-code {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-border);
+    letter-spacing: -2px;
+  }
+
+  .t-out-msg {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .t-out-dim {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  .t-cursor-wrap { margin-left: var(--space-1); }
+
+  /* Actions */
+  .error-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .elink {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-4);
+    transition: all var(--transition-fast);
+  }
+
+  .elink:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .elink:first-child {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: rgba(0, 255, 65, 0.08);
+  }
+
+  @media (max-width: 480px) {
+    .t-out-code { font-size: 2.5rem; }
+    .error-actions { flex-direction: column; }
+    .elink { text-align: center; }
+  }
+</style>

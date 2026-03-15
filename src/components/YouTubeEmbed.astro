@@ -1,0 +1,94 @@
+---
+interface Props {
+  videoId: string;
+  title?: string;
+}
+
+const { videoId, title = "YouTube video" } = Astro.props;
+const cleanId = videoId.split('?')[0];
+---
+
+<div class="yt-terminal">
+  <div class="yt-titlebar">
+    <div class="dots">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+    </div>
+    <span class="yt-cmd">$ open demo.mp4 <span class="yt-title-text">// {title}</span></span>
+  </div>
+  <div class="yt-body">
+    <div class="yt-embed">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${cleanId}`}
+        title={title}
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+<style>
+  .yt-terminal {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: var(--space-6) 0;
+    font-family: var(--font-mono);
+  }
+
+  .yt-titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .dots { display: flex; gap: 6px; flex-shrink: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background-color: #ff5f57; }
+  .dot-y { background-color: #febc2e; }
+  .dot-g { background-color: #28c840; }
+
+  .yt-cmd {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .yt-title-text {
+    color: var(--color-text-dim);
+  }
+
+  .yt-body {
+    background-color: #000;
+  }
+
+  .yt-embed {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+
+  .yt-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  @media (max-width: 768px) {
+    .yt-terminal {
+      margin: var(--space-4) 0;
+    }
+  }
+</style>

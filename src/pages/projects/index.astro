@@ -1,0 +1,539 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allProjects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const allTags = [...new Set(allProjects.flatMap((p) => p.data.stack))].sort();
+
+const projectsData = allProjects.map(project => ({
+  slug: project.slug,
+  title: project.data.title,
+  period: project.data.period,
+  role: project.data.role,
+  stack: project.data.stack,
+  highlights: project.data.highlights,
+  metrics: project.data.metrics,
+}));
+---
+
+<BaseLayout
+  title="Projects"
+  description="주요 프로젝트 목록입니다. 백엔드 아키텍처, 인프라 자동화, 성능 최적화 등의 경험을 확인하세요."
+>
+  <section class="section">
+    <div class="container">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="header-prompt">
+          <span class="prompt-user">user@dev</span><span class="prompt-sep">:</span><span class="prompt-path">~/projects</span><span class="prompt-dollar">$</span>
+          <span class="prompt-cmd">ls -la projects/ <span class="cmd-count"># {allProjects.length} projects found</span></span>
+        </div>
+        <div class="header-total">
+          <span class="total-label">total {allProjects.length}</span>
+        </div>
+      </div>
+
+      <!-- Stack Filter -->
+      <div class="filter-panel">
+        <div class="filter-prompt">
+          <span class="prompt-dollar">$</span>
+          <span class="filter-label">filter --stack=</span>
+          <div class="filter-tags" id="tag-list">
+            <button class="ftag active" data-tag="">[all]</button>
+            {allTags.map((tag) => (
+              <button class="ftag" data-tag={tag}>[{tag}]</button>
+            ))}
+          </div>
+        </div>
+        <div class="filter-active" id="filter-active" hidden>
+          <span class="prompt-dollar">$</span>
+          <span class="active-text">filter: stack=<span id="active-tag-label"></span></span>
+          <button class="clear-btn" id="clear-filter">[×clear]</button>
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projects-grid">
+        {allProjects.map((project) => (
+          <article class="pcard" data-stack={project.data.stack.join(',')}>
+            <a href={`/projects/${project.slug}`} class="pcard-link">
+
+              <!-- Terminal titlebar -->
+              <div class="pcard-titlebar">
+                <div class="dots">
+                  <span class="dot dot-r"></span>
+                  <span class="dot dot-y"></span>
+                  <span class="dot dot-g"></span>
+                </div>
+                <span class="pcard-filename">▶ {project.slug}/</span>
+                <span class="pcard-period">{project.data.period}</span>
+              </div>
+
+              <!-- Card body -->
+              <div class="pcard-body">
+                <div class="pcard-role">
+                  <span class="field-key">role</span>
+                  <span class="field-sep"> : </span>
+                  <span class="field-val">{project.data.role}</span>
+                </div>
+
+                <h2 class="pcard-title">{project.data.title}</h2>
+
+                {project.data.highlights.length > 0 && (
+                  <ul class="pcard-highlights">
+                    {project.data.highlights.slice(0, 2).map((h) => (
+                      <li><span class="hi-arrow">→</span> {h}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {project.data.metrics.length > 0 && (
+                  <div class="pcard-metrics">
+                    {project.data.metrics.slice(0, 2).map((m) => (
+                      <span class="metric"><span class="metric-arrow">↗</span> {m}</span>
+                    ))}
+                  </div>
+                )}
+
+                <div class="pcard-stack">
+                  {project.data.stack.slice(0, 5).map((tech) => (
+                    <span class="stag">{tech}</span>
+                  ))}
+                  {project.data.stack.length > 5 && (
+                    <span class="stag stag-more">+{project.data.stack.length - 5}</span>
+                  )}
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="pcard-footer">
+                <span class="footer-enter">↵ enter</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" hidden>
+        <div class="empty-prompt">
+          <span class="prompt-dollar">$</span>
+          <span class="empty-cmd">find . -stack "<span id="empty-tag"></span>" -type project</span>
+        </div>
+        <div class="empty-output">
+          <span class="empty-result">// no results found</span>
+          <button class="empty-reset" id="reset-filter">[reset filter]</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ projectsData, allTags }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    let currentTag = '';
+
+    const tagList = document.getElementById('tag-list');
+    const filterActive = document.getElementById('filter-active');
+    const activeTagLabel = document.getElementById('active-tag-label');
+    const clearFilter = document.getElementById('clear-filter');
+    const resetFilter = document.getElementById('reset-filter');
+    const projectsGrid = document.getElementById('projects-grid');
+    const emptyState = document.getElementById('empty-state');
+    const emptyTag = document.getElementById('empty-tag');
+    const projectCards = projectsGrid?.querySelectorAll('.pcard');
+
+    // Read URL param on load
+    const urlParams = new URLSearchParams(window.location.search);
+    const tagParam = urlParams.get('tag');
+    if (tagParam) {
+      currentTag = tagParam;
+      applyFilter();
+    }
+
+    tagList?.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target.classList.contains('ftag')) {
+        currentTag = target.dataset.tag || '';
+        applyFilter();
+      }
+    });
+
+    clearFilter?.addEventListener('click', () => {
+      currentTag = '';
+      applyFilter();
+    });
+
+    resetFilter?.addEventListener('click', () => {
+      currentTag = '';
+      applyFilter();
+    });
+
+    function applyFilter() {
+      const newUrl = currentTag ? `/projects?tag=${encodeURIComponent(currentTag)}` : '/projects';
+      window.history.replaceState({}, '', newUrl);
+
+      // Update tag buttons
+      tagList?.querySelectorAll('.ftag').forEach(btn => {
+        const btnTag = btn.dataset.tag || '';
+        btn.classList.toggle('active', btnTag === currentTag);
+      });
+
+      // Show/hide active filter bar
+      if (filterActive) {
+        filterActive.hidden = !currentTag;
+      }
+      if (activeTagLabel) activeTagLabel.textContent = currentTag;
+      if (emptyTag) emptyTag.textContent = currentTag;
+
+      // Filter cards
+      let visibleCount = 0;
+      projectCards?.forEach(card => {
+        const stack = card.dataset.stack?.split(',') || [];
+        const shouldShow = !currentTag || stack.includes(currentTag);
+        card.style.display = shouldShow ? '' : 'none';
+        if (shouldShow) visibleCount++;
+      });
+
+      if (projectsGrid && emptyState) {
+        projectsGrid.style.display = visibleCount > 0 ? 'grid' : 'none';
+        emptyState.hidden = visibleCount > 0;
+      }
+    }
+  });
+</script>
+
+<style>
+  .section {
+    padding: var(--space-12) 0 var(--space-20);
+    font-family: var(--font-mono);
+  }
+
+  /* Page Header */
+  .page-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .header-prompt {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-1);
+  }
+
+  .prompt-user { color: var(--color-accent); font-weight: 700; }
+  .prompt-sep  { color: var(--color-text-muted); }
+  .prompt-path { color: var(--color-prompt-path); }
+  .prompt-dollar { color: var(--color-text-muted); margin-left: var(--space-1); }
+  .prompt-cmd  { color: var(--color-text-bright); }
+  .cmd-count   { color: var(--color-text-muted); }
+
+  .header-total {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    padding-left: calc(var(--space-4) * 2);
+  }
+
+  /* Filter Panel */
+  .filter-panel {
+    margin-bottom: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .filter-prompt {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  .filter-label {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .ftag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 2px var(--space-2);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .ftag:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .ftag.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: rgba(0, 255, 65, 0.08);
+  }
+
+  .filter-active {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  .filter-active[hidden] { display: none; }
+
+  .active-text { color: var(--color-accent); }
+
+  .clear-btn {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+
+  .clear-btn:hover { color: var(--color-accent); }
+
+  /* Projects Grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-6);
+  }
+
+  /* Project Card */
+  .pcard {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .pcard:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.08);
+  }
+
+  .pcard-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Titlebar */
+  .pcard-titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .dots { display: flex; gap: 6px; flex-shrink: 0; }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-r { background-color: #ff5f57; }
+  .dot-y { background-color: #febc2e; }
+  .dot-g { background-color: #28c840; }
+
+  .pcard-filename {
+    flex: 1;
+    font-size: var(--text-xs);
+    color: var(--color-prompt-path);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pcard-period {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    white-space: nowrap;
+  }
+
+  /* Card Body */
+  .pcard-body {
+    flex: 1;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .pcard-role {
+    font-size: var(--text-xs);
+  }
+
+  .field-key { color: var(--color-text-dim); }
+  .field-sep { color: var(--color-text-dim); }
+  .field-val { color: var(--color-accent); }
+
+  .pcard-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text-bright);
+    margin: 0;
+    line-height: 1.4;
+    transition: color var(--transition-fast);
+  }
+
+  .pcard:hover .pcard-title { color: var(--color-accent); }
+
+  /* Highlights */
+  .pcard-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .pcard-highlights li {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .hi-arrow { color: var(--color-accent); margin-right: var(--space-1); }
+
+  /* Metrics */
+  .pcard-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .metric {
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 2px var(--space-2);
+  }
+
+  .metric-arrow { color: var(--color-accent); }
+
+  /* Stack Tags */
+  .pcard-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: auto;
+  }
+
+  .stag {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    background-color: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 2px var(--space-2);
+    transition: all var(--transition-fast);
+  }
+
+  .pcard:hover .stag {
+    border-color: rgba(0, 255, 65, 0.3);
+    color: var(--color-text-muted);
+  }
+
+  .stag-more { color: var(--color-text-dim); }
+
+  /* Card Footer */
+  .pcard-footer {
+    padding: var(--space-2) var(--space-4);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .footer-enter {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    transition: color var(--transition-fast);
+  }
+
+  .pcard:hover .footer-enter { color: var(--color-accent); }
+
+  /* Empty State */
+  .empty-state {
+    padding: var(--space-16) 0;
+  }
+
+  .empty-state[hidden] { display: none; }
+
+  .empty-prompt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-3);
+  }
+
+  .empty-cmd { color: var(--color-text-muted); }
+
+  .empty-output {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding-left: calc(var(--space-4) * 2);
+    font-size: var(--text-sm);
+  }
+
+  .empty-result { color: var(--color-text-dim); }
+
+  .empty-reset {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+  }
+
+  .empty-reset:hover { opacity: 0.7; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .header-prompt {
+      font-size: var(--text-xs);
+    }
+  }
+</style>

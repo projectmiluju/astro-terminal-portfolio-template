@@ -1,0 +1,167 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  ogImage = siteConfig.ogImage,
+  ogType = 'website',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+const fullTitle = title === siteConfig.title ? title : `${title} | ${siteConfig.name}`;
+---
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  
+  <!-- Primary Meta Tags -->
+  <title>{fullTitle}</title>
+  <meta name="title" content={fullTitle} />
+  <meta name="description" content={description} />
+  <meta name="author" content={siteConfig.author.name} />
+  <link rel="canonical" href={canonicalUrl} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={new URL(ogImage, siteConfig.url).href} />
+  <meta property="og:site_name" content={siteConfig.name} />
+  <meta property="og:locale" content="ko_KR" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content={canonicalUrl} />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={new URL(ogImage, siteConfig.url).href} />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Fonts: JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0d0d0d" />
+
+  <!-- Theme init: check localStorage → system pref → default dark -->
+  <script is:inline>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" aria-hidden="true">
+    <div class="scroll-progress-bar" id="scroll-progress"></div>
+  </div>
+  
+  <a href="#main-content" class="skip-link">본문으로 건너뛰기</a>
+  
+  <Header />
+  
+  <main id="main-content" class="main">
+    <slot />
+  </main>
+  
+  <Footer />
+
+  <!-- Interaction Scripts -->
+  <script is:inline>
+    (function() {
+      // Check for reduced motion preference
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      if (prefersReducedMotion) {
+        // Skip all animations if user prefers reduced motion
+        return;
+      }
+
+      // Scroll Progress Bar
+      const progressBar = document.getElementById('scroll-progress');
+      if (progressBar) {
+        window.addEventListener('scroll', () => {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          progressBar.style.width = scrollPercent + '%';
+        }, { passive: true });
+      }
+
+      // Reveal on Scroll - Intersection Observer
+      const revealElements = document.querySelectorAll('.reveal');
+      if (revealElements.length > 0) {
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+      }
+
+    })();
+  </script>
+</body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-accent);
+    color: white;
+    z-index: 100;
+    transition: top var(--transition-fast);
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+
+  .main {
+    min-height: calc(100vh - var(--header-height) - 200px);
+    padding-top: var(--header-height);
+  }
+</style>
